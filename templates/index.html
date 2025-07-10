@@ -1,24 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Voting App</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
-    </style>
+  <title>Vote Your Language</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .wave span {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .wave span.animate {
+      animation: rippleBounce 0.5s ease;
+    }
+
+    @keyframes rippleBounce {
+      0%   { transform: translateY(0); }
+      30%  { transform: translateY(-10px); }
+      60%  { transform: translateY(5px); }
+      100% { transform: translateY(0); }
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #ccc;
+      background-color: transparent;
+      color: #ffffff;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+  </style>
+
+  <!-- Auto-refresh every 15 seconds -->
+  <script>
+    setInterval(() => window.location.reload(), 15000);
+  </script>
 </head>
 <body>
-    <h1>Vote for your Favorite Language</h1>
-    <form method="POST" action="/vote">
-        <button type="submit" name="language" value="Python">Python</button>
-        <button type="submit" name="language" value="Java">Java</button>
-        <button type="submit" name="language" value="Go">Go</button>
-    </form>
-    <h2>Current Results:</h2>
-    <ul>
-        {% for lang, count in votes.items() %}
-        <li><strong>{{ lang }}</strong>: {{ count }} votes</li>
-        {% endfor %}
-    </ul>
+
+  <h1 class="wave" id="animatedText"></h1>
+
+  <form action="/vote" method="POST">
+    <button type="submit" name="language" value="Python">Python</button>
+    <button type="submit" name="language" value="Java">Java</button>
+    <button type="submit" name="language" value="Go">Go</button>
+  </form>
+
+  <h2>Current Votes:</h2>
+  <ul>
+    <li>Python: {{ votes['Python'] }}</li>
+    <li>Java: {{ votes['Java'] }}</li>
+    <li>Go: {{ votes['Go'] }}</li>
+  </ul>
+
+  <button onclick="location.reload()">Refresh</button>
+
+  <script>
+    const text = "Vote for Your Favorite Programming Language";
+    const container = document.getElementById("animatedText");
+
+    // Create spans for each letter
+    text.split("").forEach(char => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      container.appendChild(span);
+    });
+
+    let isAnimating = false;
+
+    container.addEventListener("mouseover", function (e) {
+      if (isAnimating) return;
+      if (e.target.tagName.toLowerCase() !== "span") return;
+
+      const spans = Array.from(container.querySelectorAll("span"));
+      const center = spans.indexOf(e.target);
+      isAnimating = true;
+
+      spans.forEach((span, i) => {
+        const distance = Math.abs(i - center);
+        const delay = distance * 60;
+
+        setTimeout(() => {
+          span.classList.add("animate");
+          setTimeout(() => span.classList.remove("animate"), 500);
+        }, delay);
+      });
+
+      // Total duration = max delay + bounce duration
+      const maxDistance = Math.max(center, spans.length - 1 - center);
+      const totalDuration = maxDistance * 60 + 500;
+
+      setTimeout(() => {
+        isAnimating = false;
+      }, totalDuration);
+    });
+  </script>
 </body>
 </html>

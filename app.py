@@ -13,7 +13,11 @@ def vote():
     language = request.form.get('language')
     if language in votes:
         votes[language] += 1
-    return redirect(url_for('index'))
+    return redirect(url_for('thank_you'))
+
+@app.route('/thankyou')
+def thank_you():
+    return render_template('thankyou.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
