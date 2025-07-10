@@ -74,6 +74,7 @@ voting-app/
 ├── requirements.txt
 └── templates/
     └── index.html
+    └── thankyou.html
 ```
 
 ---
@@ -269,6 +270,7 @@ voting-app/
 ├── requirements.txt
 ├── templates/
 │   └── index.html
+|   └── thankyou.html
 ├── voting-app-deployment.yaml
 └── voting-app-service.yaml
 ```
